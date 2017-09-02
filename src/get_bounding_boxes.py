@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import hog
+import matplotlib.pyplot as plt
 
 def convert_color(img, conv='RGB2YCrCb'):
     if conv == 'RGB2YCrCb':
@@ -16,7 +17,7 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
     img = img.astype(np.float32)/255
 
     img_tosearch = img[ystart:ystop,:,:]
-    ctrans_tosearch = convert_color(img_tosearch, conv='BGR2YCrCb')
+    ctrans_tosearch = convert_color(img_tosearch, conv='RGB2YCrCb')
     if scale != 1:
         imshape = ctrans_tosearch.shape
         ctrans_tosearch = cv2.resize(ctrans_tosearch, (np.int(imshape[1]/scale), np.int(imshape[0]/scale)))
@@ -26,13 +27,16 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
     ch3 = ctrans_tosearch[:,:,2]
 
     # Define blocks and steps as above
-    nxblocks = (ch1.shape[1] // pix_per_cell) - cell_per_block + 1
-    nyblocks = (ch1.shape[0] // pix_per_cell) - cell_per_block + 1
+    # nxblocks = (ch1.shape[1] // pix_per_cell) - cell_per_block + 1
+    # nyblocks = (ch1.shape[0] // pix_per_cell) - cell_per_block + 1
+    nxblocks = (ch1.shape[1] // pix_per_cell) - 1
+    nyblocks = (ch1.shape[0] // pix_per_cell) - 1
     nfeat_per_block = orient*cell_per_block**2
 
     # 64 was the orginal sampling rate, with 8 cells and 8 pix per cell
     window = 64
-    nblocks_per_window = (window // pix_per_cell) - cell_per_block + 1
+    # nblocks_per_window = (window // pix_per_cell) - cell_per_block + 1
+    nblocks_per_window = (window // pix_per_cell) - 1
     cells_per_step = 2  # Instead of overlap, define how many cells to step
     nxsteps = (nxblocks - nblocks_per_window) // cells_per_step
     nysteps = (nyblocks - nblocks_per_window) // cells_per_step
@@ -43,7 +47,7 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
     hog3 = hog.get_hog_features(ch3, orient, pix_per_cell, cell_per_block, feature_vec=False)
 
     bbox = []
-
+    
     for xb in range(nxsteps):
         for yb in range(nysteps):
             ypos = yb*cells_per_step
@@ -69,11 +73,11 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
             #test_features = X_scaler.transform(np.hstack((shape_feat, hist_feat)).reshape(1, -1))
             test_prediction = svc.predict(test_features)
 
-            if test_prediction >= 0.5:
+            if test_prediction == 1:
                 xbox_left = np.int(xleft*scale)
                 ytop_draw = np.int(ytop*scale)
                 win_draw = np.int(window*scale)
-                cv2.rectangle(draw_img,(xbox_left, ytop_draw+ystart),(xbox_left+win_draw,ytop_draw+win_draw+ystart),(0,0,255),6)
+                # cv2.rectangle(draw_img,(xbox_left, ytop_draw+ystart),(xbox_left+win_draw,ytop_draw+win_draw+ystart),(0,0,255),6)
                 bbox.append(((xbox_left, ytop_draw+ystart),(xbox_left+win_draw,ytop_draw+win_draw+ystart)))
 
     return bbox

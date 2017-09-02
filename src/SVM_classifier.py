@@ -37,6 +37,12 @@ def run_classifer(cars_list, notcars_list, color_space, spatial_size, hist_bins,
                             hog_channel=hog_channel, spatial_feat=spatial_feat,
                             hist_feat=hist_feat, hog_feat=hog_feat)
 
+    # Shuffles features
+    car_features = np.array(car_features)
+    notcar_features = np.array(notcar_features)
+    np.random.shuffle(notcar_features)
+    np.random.shuffle(car_features)
+
     X_train, X_test, y_train, y_test, X_scaler = scale_and_split_data(car_features, notcar_features)
 
     print('Using:',orient,'orientations',pix_per_cell,
@@ -44,7 +50,7 @@ def run_classifer(cars_list, notcars_list, color_space, spatial_size, hist_bins,
     print('Feature vector length:', len(X_train[0]))
 
     # Use a linear SVC
-    svc = LinearSVC()
+    svc = LinearSVC(loss='hinge')
     # Check the training time for the SVC
     t=time.time()
     svc.fit(X_train, y_train)

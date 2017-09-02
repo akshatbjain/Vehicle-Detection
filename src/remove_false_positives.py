@@ -18,6 +18,7 @@ def apply_threshold(heatmap, threshold):
     return heatmap
 
 def draw_labeled_bboxes(img, labels):
+
     # Iterate through all detected cars
     for car_number in range(1, labels[1]+1):
         # Find pixels with each car_number label value
