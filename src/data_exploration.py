@@ -25,7 +25,7 @@ def print_data_info(car_list, notcar_list):
     # Define a key "data_type" and store the data type of the test image.
     data_dict["data_type"] = type(test_image[0,0,0])
 
-    print('Your function returned a count of {} cars and {} non-cars of size: {} and data type: {}'.format(data_dict["n_cars"], data_dict["n_notcars"], data_dict["image_shape"], data_dict["data_type"]))
+    print('\033[94mYour function returned a count of {} cars and {} non-cars of size: {} and data type: {}\033[0m'.format(data_dict["n_cars"], data_dict["n_notcars"], data_dict["image_shape"], data_dict["data_type"]))
 
 def show_random_dataset_images(cars_list, notcars_list):
     # Just for fun choose random car / not-car indices and plot example images
