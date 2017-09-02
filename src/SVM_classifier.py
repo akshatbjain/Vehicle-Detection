@@ -1,10 +1,9 @@
 import numpy as np
 import time
+import pickle
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import train_test_split
-from sklearn.externals import joblib
-# import cPickle
 import hog
 
 def scale_and_split_data(car_features, notcar_features):
@@ -55,9 +54,9 @@ def run_classifer(cars_list, notcars_list, color_space, spatial_size, hist_bins,
     print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
     # Check the prediction time for a single sample
     t=time.time()
-    joblib.dump(svc, 'svc.pkl')
-    joblib.dump(X_scaler, 'X_scaler.pkl')
-    # with open('my_svc.pkl', 'wb') as fid:
-    #     cPickle.dump(svc, fid)
+
+    write_obj = {"X_scaler": X_scaler, "svc": svc}
+    with open('model.p', 'wb') as file:
+        pickle.dump(write_obj, file)
 
     return svc, X_scaler
