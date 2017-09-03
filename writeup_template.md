@@ -28,9 +28,11 @@ I then explored different color spaces and different `skimage.hog()` parameters 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 Car image
+
 ![alt text][image2]
 
 Not car image
+
 ![alt text][image3]
 
 I tried various combinations of parameters (trial and error method) and got optimum results using `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`. All 3 channels were used to extract the features as that way we can make use of all the information available to us. `YCrCb` color space was also decided after some trial and error with different color spaces. I noticed that `YCrCb` helps detect white cars better.
