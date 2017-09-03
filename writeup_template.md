@@ -15,7 +15,7 @@
 [image12]: ./output_images/labels_map.jpg
 [image13]: ./output_images/output_boxes.jpg
 
-###Histogram of Oriented Gradients (HOG)
+### Histogram of Oriented Gradients (HOG)
 
 The code for this step is contained in the code snippet `src/hog.py`.  
 
@@ -27,8 +27,10 @@ I then explored different color spaces and different `skimage.hog()` parameters 
 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
-
+Car image
 ![alt text][image2]
+
+Not car image
 ![alt text][image3]
 
 I tried various combinations of parameters (trial and error method) and got optimum results using `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`. All 3 channels were used to extract the features as that way we can make use of all the information available to us. `YCrCb` color space was also decided after some trial and error with different color spaces. I noticed that `YCrCb` helps detect white cars better.
@@ -37,7 +39,7 @@ I trained a linear SVM using the `hinge` loss function. The features were extrac
 
 The code for this is available in `src/SVM_classifier.py` file.
 
-###Sliding Window Search
+### Sliding Window Search
 
 The sliding window code can be found in `src/sliding_window.py` file. I use only the lower half of the image for extracting HOG features to improve speed and accuracy. The cars are only present in the lower half of the images and not in the sky thus we can avoid running our sliding windows in that part. I used a `ystart = 400` and `ystop = 656`.
 
@@ -77,7 +79,7 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ---
 
-###Discussion
+### Discussion
 
 One of the major challenges is to getting the false positives to zero. Here, I used heatmaps and thresholding. Although, this particular input video had very less false positives, a different video might have more. It would be interesting to see how the current pipeline performs on a different video.
 
