@@ -7,6 +7,7 @@ import pickle
 from sklearn.externals import joblib
 from scipy.ndimage.measurements import label
 from moviepy.editor import VideoFileClip
+import glob
 
 import data_exploration as de
 import SVM_classifier as svm
@@ -32,7 +33,7 @@ def explore_data():
     notcars_path = "../dataset/non-vehicles/*/*.png"
     cars_list, notcars_list = de.read_image_list(cars_path, notcars_path)
     de.print_data_info(cars_list, notcars_list)
-    #de.show_random_dataset_images(cars_list, notcars_list)
+    # de.show_random_dataset_images(cars_list, notcars_list)
 
     return cars_list, notcars_list
 
@@ -63,6 +64,7 @@ def pipeline(image):
 
     # Find final boxes from heatmap using label function
     labels = label(heatmap)
+
     draw_img = rfp.draw_labeled_bboxes(draw_image, labels)
     # cv2.rectangle(draw_img, (0, 400), (1280, 656), (255,0,0), 6)
     # fig = plt.figure()
@@ -93,25 +95,17 @@ if __name__ == "__main__":
                             hog_channel=hog_channel, spatial_feat=spatial_feat,
                             hist_feat=hist_feat, hog_feat=hog_feat)
 
+    # Run on all Test Images
+    # images = glob.glob('../test_images/test*.jpg')
+    #
+    # for fname in images:
+    #     image = mpimg.imread(fname)
+    #     output = pipeline(image)
+
+    # Run on project video
     input_file = '../project_video.mp4'
     output_file = '../project_output.mp4'
 
     video = VideoFileClip(input_file)
     annotated_video = video.fl_image(pipeline)
     annotated_video.write_videofile(output_file, audio=False)
-
-    # video = cv2.VideoCapture('../project_video.mp4')
-    #
-    # while(video.isOpened()):
-    #     ret, frame = video.read()
-    #
-    #     if(ret):
-    #         output = pipeline(frame)
-    #         out.write(np.uint8(output))
-    #         # cv2.imshow("output", output)
-    #         # cv2.waitKey(1)
-    #     else:
-    #         break
-    #
-    # video.release()
-    # cv2.destroyAllWindows()

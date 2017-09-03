@@ -44,4 +44,5 @@ def show_random_dataset_images(cars_list, notcars_list):
     plt.subplot(122)
     plt.imshow(notcar_image)
     plt.title('Example Not-car Image')
+    # plt.savefig('../output_images/car_not_car.jpg')
     plt.show()
